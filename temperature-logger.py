@@ -20,13 +20,19 @@ interval = settings.getint("interval", 60)
 logger.debug(f"interval = {interval}")
 
 serial = serial.Serial(port)
+serial.reset_input_buffer()
 
+line = ''
+str = ''
 time_to_read = datetime.datetime.now() + datetime.timedelta(seconds=1)
 while True:
     logger.debug(f'waiting until {time_to_read}')
     while datetime.datetime.now() < time_to_read:
         line = serial.readline()
-    str = line.decode()
-    temp = float(str)
-    logger.info(temp)
+    try:
+        str = line.decode()
+        temperature = float(str)
+        logger.info(temperature)
+    except:
+        logger.debug(f'invalid temperature: {str}')
     time_to_read = datetime.datetime.now() + datetime.timedelta(seconds=interval)
