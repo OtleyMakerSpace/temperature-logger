@@ -10,7 +10,7 @@ Arduino code is available [here](https://github.com/DavidFrankland/arduino-seria
 
 Settings are stored in the file `settings.ini`. An example looks like:
 
-```
+```ini
 [settings]
 port = /dev/ttyUSB0
 interval = 60
