@@ -15,14 +15,19 @@ logger.info("starting up")
 logger.info("reading config settings")
 config = configparser.ConfigParser()
 config.read("settings.ini")
+
+# global settings
 settings = config["settings"]
 port = settings.get("port", '/dev/ttyUSB0')
 logger.info(f"port = {port}")
 interval = settings.getint("interval", 60)
 logger.info(f"interval = {interval}")
-mqtt_host = settings.get("mqtt-host", "localhost")
+
+# MQTT settings
+mqtt_settings = config["mqtt"]
+mqtt_host = mqtt_settings.get("host", "localhost")
 logger.info(f"mqtt_host = {mqtt_host}")
-mqtt_topic = settings.get("mqtt-topic", "temperature")
+mqtt_topic = mqtt_settings.get("topic", "temperature")
 logger.info(f"mqtt_topic = {mqtt_topic}")
 
 serial = serial.Serial(port)
