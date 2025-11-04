@@ -29,6 +29,11 @@ mqtt_host = mqtt_settings.get("host", "localhost")
 logger.info(f"mqtt_host = {mqtt_host}")
 mqtt_topic = mqtt_settings.get("topic", "temperature")
 logger.info(f"mqtt_topic = {mqtt_topic}")
+mqtt_qos = mqtt_settings.getint("qos", 0)
+if mqtt_qos < 0 or mqtt_qos > 2:
+    raise Exception("MQTT QoS must be in the range 0 to 2")
+logger.info(f"mqtt_qos = {mqtt_qos}")
+
 
 serial = serial.Serial(port)
 serial.reset_input_buffer()
@@ -45,7 +50,7 @@ while True:
         logger.debug(f'temperature is {temperature}')
         try:
             logger.debug(f"sending {mqtt_topic} to {mqtt_host}")
-            paho.mqtt.publish.single(mqtt_topic, temperature, hostname=mqtt_host)
+            paho.mqtt.publish.single(mqtt_topic, temperature, hostname=mqtt_host, qos=mqtt_qos)
         except Exception as ex:
             logger.error(f'failed to publish {mqtt_topic} message: {ex}')
     except:
