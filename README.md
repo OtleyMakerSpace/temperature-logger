@@ -18,6 +18,7 @@ interval = 60
 [mqtt]
 host = 10.1.0.1
 topic = temperature/display-pi
+qos = 1
 ```
 
 The `[settings]` section contains global settings:
@@ -31,3 +32,5 @@ The `[mqtt]` section contains MQTT-specific settings:
 **host**: The MQTT broker to use.
 
 **topic**: MQTT topic for temperature message.
+
+**qos** (0-2): MQTT Quality of Service to use.
