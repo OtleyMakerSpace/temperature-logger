@@ -5,7 +5,6 @@ import logging.config
 import serial
 import paho.mqtt.publish
 
-
 # setup logging
 logging.config.fileConfig("logging.ini")
 logger = logging.getLogger()
@@ -34,25 +33,30 @@ if mqtt_qos < 0 or mqtt_qos > 2:
     raise Exception("MQTT QoS must be in the range 0 to 2")
 logger.info(f"mqtt_qos = {mqtt_qos}")
 
-
 serial = serial.Serial(port)
 serial.reset_input_buffer()
 
 line: bytes
 time_to_read = datetime.datetime.now() + datetime.timedelta(seconds=1)
-while True:
-    logger.debug(f'waiting until {time_to_read}')
-    while datetime.datetime.now() < time_to_read:
-        line = serial.readline()
-    try:
-        line_str = line.decode()
-        temperature = float(line_str)
-        logger.debug(f'temperature is {temperature}')
+try:
+    while True:
+        logger.debug(f'waiting until {time_to_read}')
+        while datetime.datetime.now() < time_to_read:
+            line = serial.readline()
+            logger.debug("still waiting")
         try:
-            logger.debug(f"sending {mqtt_topic} to {mqtt_host}")
-            paho.mqtt.publish.single(mqtt_topic, temperature, hostname=mqtt_host, qos=mqtt_qos)
-        except Exception as ex:
-            logger.error(f'failed to publish {mqtt_topic} message: {ex}')
-    except:
-        logger.error(f'invalid temperature: {line_str}')
-    time_to_read = datetime.datetime.now() + datetime.timedelta(seconds=interval)
+            logger.debug(f"line: {line}")
+            line_str = line.decode()
+            logger.debug(f"line_str: '{line_str}'")
+            temperature = float(line_str)
+            logger.debug(f'temperature is {temperature}')
+            try:
+                logger.debug(f"sending {mqtt_topic} to {mqtt_host}")
+                paho.mqtt.publish.single(mqtt_topic, temperature, hostname=mqtt_host, qos=mqtt_qos)
+            except Exception as ex:
+                logger.error(f'failed to publish {mqtt_topic} message: {ex}')
+        except:
+            logger.error(f'invalid temperature: {line_str}')
+        time_to_read = datetime.datetime.now() + datetime.timedelta(seconds=interval)
+except Exception as ex:
+    logger.error(f'something went wrong: {ex}')
