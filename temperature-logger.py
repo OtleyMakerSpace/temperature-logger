@@ -33,7 +33,7 @@ if mqtt_qos < 0 or mqtt_qos > 2:
     raise Exception("MQTT QoS must be in the range 0 to 2")
 logger.info(f"mqtt_qos = {mqtt_qos}")
 
-serial = serial.Serial(port)
+serial = serial.Serial(port, timeout=5)
 serial.reset_input_buffer()
 
 line: bytes
