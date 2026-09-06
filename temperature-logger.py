@@ -42,8 +42,9 @@ try:
     while True:
         logger.debug(f'waiting until {time_to_read}')
         while datetime.datetime.now() < time_to_read:
+            logger.debug("start serial.readline()")
             line = serial.readline()
-            logger.debug("still waiting")
+            logger.debug("end serial.readline()")
         try:
             logger.debug(f"line: {line}")
             line_str = line.decode()
