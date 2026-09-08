@@ -58,6 +58,7 @@ try:
                 logger.error(f'failed to publish {mqtt_topic} message: {ex}')
         except:
             logger.error(f'invalid temperature: {line_str}')
+            serial.reset_input_buffer()
         time_to_read = datetime.datetime.now() + datetime.timedelta(seconds=interval)
 except Exception as ex:
     logger.error(f'something went wrong: {ex}')
