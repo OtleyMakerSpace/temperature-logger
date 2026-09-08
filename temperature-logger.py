@@ -45,6 +45,7 @@ try:
             logger.debug("start serial.readline()")
             line = serial.readline()
             logger.debug(f"end serial.readline(), got: {line}")
+            logger.debug(f"open: {serial.is_open}")
         try:
             logger.debug(f"line: {line}")
             line_str = line.decode()
